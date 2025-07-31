@@ -1,0 +1,88 @@
+import React, { useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ViewProductDetails from "../components/ViewProductDetails";
+
+const electronicProducts = [
+  { id: 5, image: "smartphone.jpg", title: "Smartphone", price: 45000, quantity: 1 },
+  { id: 6, image: "laptop.jpg", title: "Laptop", price: 120000, quantity: 1 },
+  { id: 7, image: "headphones.jpg", title: "Headphones", price: 15000, quantity: 1 },
+  { id: 8, image: "tablet.jpg", title: "Tablet", price: 65000, quantity: 1 },
+];
+
+const Electronics = ({
+  cartItems,
+  setCartItems,
+  cartOpen,
+  setCartOpen,
+  handleAddToCart,
+  handleRemoveFromCart,
+  handleCartClick,
+  handleProfileClick,
+  user,
+  onLogout,
+}) => {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  const handleViewProduct = (product) => {
+    setSelectedProduct(product);
+    setShowDetails(true);
+  };
+
+  const handleAddProductToCart = (product) => {
+    handleAddToCart(product);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header
+        cartItems={cartItems}
+        setCartItems={setCartItems}
+        cartOpen={cartOpen}
+        setCartOpen={setCartOpen}
+        handleAddToCart={handleAddToCart}
+        handleRemoveFromCart={handleRemoveFromCart}
+        handleCartClick={handleCartClick}
+        handleProfileClick={handleProfileClick}
+        user={user}
+        onLogout={onLogout}
+      />
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Electronics</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {electronicProducts.map((prod, idx) => (
+            <div key={idx} className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+              <img src={prod.image} alt={prod.title} className="w-32 h-40 object-cover rounded mb-3" />
+              <h3 className="font-semibold text-lg mb-1">{prod.title}</h3>
+              <p className="text-green-700 font-bold mb-2">{prod.price.toLocaleString()} XAF</p>
+              <div className="flex gap-2">
+                <button
+                  className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 text-sm"
+                  onClick={() => handleViewProduct(prod)}
+                >
+                  View More
+                </button>
+                <button
+                  onClick={() => handleAddProductToCart(prod)}
+                  className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 text-sm"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+      {/* Product Details Modal */}
+      <ViewProductDetails
+        open={showDetails}
+        onClose={() => setShowDetails(false)}
+        product={selectedProduct}
+      />
+      <Footer />
+    </div>
+  );
+};
+
+export default Electronics;
