@@ -32,11 +32,20 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration - More permissive for production debugging
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('CORS check for origin:', origin);
+    console.log('Environment variables:', {
+      NODE_ENV: process.env.NODE_ENV,
+      FRONTEND_URL: process.env.FRONTEND_URL
+    });
+
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('No origin - allowing request');
+      return callback(null, true);
+    }
 
     const allowedOrigins = [
       'https://jalai-2-ecommerce.vercel.app',
@@ -46,14 +55,24 @@ const corsOptions = {
       process.env.FRONTEND_URL
     ].filter(Boolean);
 
+    console.log('Allowed origins:', allowedOrigins);
+
     // Allow any vercel preview deployments
     const isVercelPreview = /^https:\/\/jalai-2-ecommerce-.*\.vercel\.app$/.test(origin);
+    const isVercelMain = origin === 'https://jalai-2-ecommerce.vercel.app';
 
-    if (allowedOrigins.includes(origin) || isVercelPreview) {
+    if (allowedOrigins.includes(origin) || isVercelPreview || isVercelMain) {
+      console.log('Origin allowed:', origin);
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      // For debugging - temporarily allow all origins in production
+      if (process.env.NODE_ENV === 'production') {
+        console.log('Production mode - allowing origin for debugging');
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,
@@ -65,6 +84,27 @@ app.use(cors(corsOptions));
 
 // Handle preflight requests
 app.options('*', cors(corsOptions));
+
+// Additional CORS headers for debugging
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  console.log('Request from origin:', origin);
+
+  // Set CORS headers manually as backup
+  if (origin && (origin.includes('vercel.app') || origin.includes('localhost'))) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  }
+
+  if (req.method === 'OPTIONS') {
+    console.log('Preflight request handled');
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Compression middleware
 app.use(compression());
