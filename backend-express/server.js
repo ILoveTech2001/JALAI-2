@@ -97,36 +97,7 @@ app.get('/health', async (req, res) => {
   });
 });
 
-// Simple mock auth route for testing (when database is not available)
-app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body;
-
-  // Mock admin login
-  if (email === 'admin@jalai.com' && password === 'admin123') {
-    return res.json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        id: '1',
-        email: 'admin@jalai.com',
-        firstName: 'Admin',
-        lastName: 'User',
-        name: 'Admin User',
-        role: 'ADMIN',
-        userType: 'ADMIN'
-      },
-      accessToken: 'mock-jwt-token-' + Date.now(),
-      refreshToken: 'mock-refresh-token-' + Date.now()
-    });
-  }
-
-  return res.status(401).json({
-    success: false,
-    message: 'Invalid credentials'
-  });
-});
-
-// API routes (will be used when database is available)
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -148,22 +119,15 @@ app.use(errorHandler);
 // Database connection and server startup
 const startServer = async () => {
   try {
-    // Try to connect to database (optional for now)
-    try {
-      await sequelize.authenticate();
-      console.log('✅ Database connection established successfully.');
+    // Connect to database
+    await sequelize.authenticate();
+    console.log('✅ Database connection established successfully.');
 
-      // Sync database models (in development)
-      if (process.env.NODE_ENV !== 'production') {
-        await sequelize.sync({ alter: true });
-        console.log('✅ Database models synchronized.');
-      }
-    } catch (dbError) {
-      console.warn('⚠️ Database connection failed, starting server without database:', dbError.message);
-      console.warn('⚠️ Some features may not work properly without database connection');
-    }
+    // Sync database models (create tables if they don't exist)
+    await sequelize.sync({ alter: false });
+    console.log('✅ Database models synchronized.');
 
-    // Start server regardless of database connection
+    // Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -172,6 +136,7 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error('❌ Unable to start server:', error);
+    console.error('❌ Make sure DATABASE_URL is set correctly');
     process.exit(1);
   }
 };
