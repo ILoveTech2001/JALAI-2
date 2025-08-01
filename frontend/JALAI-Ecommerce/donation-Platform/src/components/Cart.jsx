@@ -18,7 +18,13 @@ const Cart = ({ open, items, onRemove, onClose, onCheckout }) => {
           <ul className="divide-y">
             {items.map((item, idx) => (
               <li key={item.id || idx} className="flex items-center gap-3 p-4">
-                <img src={item.image} alt={item.name || item.title} className="w-12 h-16 object-cover rounded" />
+                <img
+                  src={item.image}
+                  alt={item.name || item.title}
+                  className="w-12 h-16 object-cover rounded"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="flex-1">
                   <div className="font-semibold">{item.name || item.title}</div>
                   <div className="text-green-700 font-bold">{item.price?.toLocaleString()} XAF</div>

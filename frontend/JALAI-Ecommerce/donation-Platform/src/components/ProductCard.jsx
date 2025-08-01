@@ -4,6 +4,8 @@ const ProductCard = ({ image, title, price, onView, onAddToCart }) => (
         src={image}
         alt={title}
         className="w-32 h-32 object-cover rounded mb-3"
+        loading="lazy"
+        decoding="async"
       />
       <h4 className="font-semibold mb-1 text-center">{title}</h4>
       {price && (

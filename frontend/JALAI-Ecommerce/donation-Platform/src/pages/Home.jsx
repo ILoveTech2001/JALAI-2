@@ -9,6 +9,20 @@ import ReviewCard from "../components/ReviewCard";
 import ViewProductDetails from "../components/ViewProductDetails";
 // Import mock product data
 import { clothingProducts, furnitureProducts, getFeaturedProducts } from "../data/mockProducts";
+
+// Preload critical images
+const preloadImages = [
+  '/hand-shake.jpg',
+  '/kids-smiling.jpeg'
+];
+
+// Preload function
+const preloadCriticalImages = () => {
+  preloadImages.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+};
 // You can use Lucide, Heroicons, or SVGs for icons. Here are SVGs for simplicity:
 const CartIcon = () => (
   <svg
@@ -150,6 +164,11 @@ const Home = ({
     reviewSlide * reviewsPerSlide + reviewsPerSlide
   );
 
+  // Preload critical images on component mount
+  useEffect(() => {
+    preloadCriticalImages();
+  }, []);
+
   // Auto-slide every 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -208,6 +227,8 @@ const Home = ({
                   alt="Hero"
                   className="w-full h-full object-cover rounded-xl mix-blend-multiply opacity-90 transition-all duration-700"
                   style={{ background: "transparent" }}
+                  loading="lazy"
+                  decoding="async"
                 />
                 {/* Optional: a subtle overlay for extra blending */}
                 <div className="absolute inset-0 rounded-xl bg-white/30 pointer-events-none" />
