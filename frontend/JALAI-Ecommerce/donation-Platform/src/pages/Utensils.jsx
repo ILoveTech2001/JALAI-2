@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ViewProductDetails from "../components/ViewProductDetails";
-
-const utensils = [
-  { image: "green-gown.jpeg", title: "Green Gown", price: 8000 },
-  { image: "classic-dress.jpg", title: "Classic Dress", price: 12000 },
-  { image: "summer-wear.jpg", title: "Summer Wear", price: 6500 },
-  { image: "elegant-outfit.jpg", title: "Elegant Outfit", price: 15000 },
-  // Add more as needed
-];
+import { utensilsProducts } from '../data/mockProducts';
 
 const Utensil = ({
   cartItems,
@@ -54,17 +47,17 @@ const Utensil = ({
           Get all your home utensils
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {utensils.map((prod, idx) => (
+          {utensilsProducts.map((prod) => (
             <div
-              key={idx}
+              key={prod.id}
               className="bg-white rounded-xl shadow p-4 flex flex-col items-center"
             >
               <img
-                src={prod.image}
-                alt={prod.title}
+                src={prod.imageUrl}
+                alt={prod.name}
                 className="w-32 h-40 object-cover rounded mb-3"
               />
-              <h3 className="font-semibold text-lg mb-1">{prod.title}</h3>
+              <h3 className="font-semibold text-lg mb-1">{prod.name}</h3>
               <p className="text-green-700 font-bold mb-2">
                 {prod.price.toLocaleString()} XAF
               </p>

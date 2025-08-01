@@ -2,14 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ViewProductDetails from "../components/ViewProductDetails";
-
-const FunitureProducts = [
-  { image: "green-gown.jpeg", title: "Green Gown", price: 8000 },
-  { image: "classic-dress.jpg", title: "Classic Dress", price: 12000 },
-  { image: "summer-wear.jpg", title: "Summer Wear", price: 6500 },
-  { image: "elegant-outfit.jpg", title: "Elegant Outfit", price: 15000 },
-  // Add more as needed
-];
+import { furnitureProducts } from '../data/mockProducts';
 
 const Funiture = ({
   cartItems,
@@ -53,12 +46,12 @@ const Funiture = ({
         onLogout={onLogout}
       />
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Get your home funiture</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Get your home furniture</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {FunitureProducts.map((prod, idx) => (
-            <div key={idx} className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-              <img src={prod.image} alt={prod.title} className="w-32 h-40 object-cover rounded mb-3" />
-              <h3 className="font-semibold text-lg mb-1">{prod.title}</h3>
+          {furnitureProducts.map((prod) => (
+            <div key={prod.id} className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+              <img src={prod.imageUrl} alt={prod.name} className="w-32 h-40 object-cover rounded mb-3" />
+              <h3 className="font-semibold text-lg mb-1">{prod.name}</h3>
               <p className="text-green-700 font-bold mb-2">{prod.price.toLocaleString()} XAF</p>
               <div className="flex gap-2">
                 <button

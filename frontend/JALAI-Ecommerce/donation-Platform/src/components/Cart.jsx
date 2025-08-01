@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import CheckoutModal from "./CheckoutModal";
 
 const Cart = ({ open, items, onRemove, onClose, onCheckout }) => {
+  const [showCheckout, setShowCheckout] = useState(false);
   if (!open) return null;
 
   return (
@@ -15,11 +17,14 @@ const Cart = ({ open, items, onRemove, onClose, onCheckout }) => {
         <>
           <ul className="divide-y">
             {items.map((item, idx) => (
-              <li key={idx} className="flex items-center gap-3 p-4">
-                <img src={item.image} alt={item.title} className="w-12 h-16 object-cover rounded" />
+              <li key={item.id || idx} className="flex items-center gap-3 p-4">
+                <img src={item.image} alt={item.name || item.title} className="w-12 h-16 object-cover rounded" />
                 <div className="flex-1">
-                  <div className="font-semibold">{item.title}</div>
+                  <div className="font-semibold">{item.name || item.title}</div>
                   <div className="text-green-700 font-bold">{item.price?.toLocaleString()} XAF</div>
+                  {item.quantity > 1 && (
+                    <div className="text-sm text-gray-600">Qty: {item.quantity}</div>
+                  )}
                 </div>
                 <button
                   className="text-red-500 hover:text-red-700 text-sm"
@@ -32,14 +37,35 @@ const Cart = ({ open, items, onRemove, onClose, onCheckout }) => {
             ))}
           </ul>
           <div className="p-4 border-t">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-lg font-semibold">Total:</span>
+              <span className="text-xl font-bold text-green-600">
+                {items.reduce((total, item) => total + ((item.price || 0) * (item.quantity || 1)), 0).toLocaleString()} FCFA
+              </span>
+            </div>
             <button
               className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 font-semibold"
-              onClick={onCheckout}
+              onClick={() => setShowCheckout(true)}
             >
               Proceed to Checkout
             </button>
           </div>
         </>
+      )}
+
+      {/* Checkout Modal */}
+      {showCheckout && (
+        <CheckoutModal
+          cartItems={items}
+          onClose={() => setShowCheckout(false)}
+          onSuccess={() => {
+            // Clear cart and close modals
+            items.forEach(item => onRemove(item));
+            setShowCheckout(false);
+            onClose();
+            alert('Order placed successfully!');
+          }}
+        />
       )}
     </div>
   );

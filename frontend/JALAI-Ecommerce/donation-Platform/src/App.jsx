@@ -60,8 +60,36 @@ function AppContent() {
   ];
 
   const handleAddToCart = (product) => {
-    setCartItems((prev) => [...prev, product]);
-    alert(`Added ${product.title} to cart!`);
+    // Ensure the product has the correct structure for cart
+    const cartItem = {
+      id: product.id,
+      name: product.name || product.title, // Handle both name and title fields
+      price: product.price,
+      image: product.imageUrl || product.image, // Handle both imageUrl and image fields
+      quantity: 1,
+      // Include other relevant fields
+      condition: product.condition,
+      description: product.description
+    };
+
+    // Check if item already exists in cart
+    const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.id);
+
+    if (existingItemIndex >= 0) {
+      // Update quantity if item already exists
+      setCartItems((prev) =>
+        prev.map((item, index) =>
+          index === existingItemIndex
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+      alert(`Updated ${cartItem.name} quantity in cart!`);
+    } else {
+      // Add new item to cart
+      setCartItems((prev) => [...prev, cartItem]);
+      alert(`Added ${cartItem.name} to cart!`);
+    }
   };
 
   const handleRemoveFromCart = (item) => {

@@ -2,13 +2,7 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ViewProductDetails from '../components/ViewProductDetails';
-
-const footwearProducts = [
-	{ image: 'sneakers.jpg', title: 'Sneakers', price: 9000 },
-	{ image: 'leather-shoes.jpg', title: 'Leather Shoes', price: 18000 },
-	{ image: 'sandals.jpg', title: 'Sandals', price: 5000 },
-	{ image: 'boots.jpg', title: 'Boots', price: 22000 },
-];
+import { footwearProducts } from '../data/mockProducts';
 
 const Footwear = ({
 	cartItems,
@@ -56,17 +50,17 @@ const Footwear = ({
 					Footwear
 				</h2>
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-					{footwearProducts.map((prod, idx) => (
+					{footwearProducts.map((prod) => (
 						<div
-							key={idx}
+							key={prod.id}
 							className="bg-white rounded-xl shadow p-4 flex flex-col items-center"
 						>
 							<img
-								src={prod.image}
-								alt={prod.title}
+								src={prod.imageUrl}
+								alt={prod.name}
 								className="w-32 h-40 object-cover rounded mb-3"
 							/>
-							<h3 className="font-semibold text-lg mb-1">{prod.title}</h3>
+							<h3 className="font-semibold text-lg mb-1">{prod.name}</h3>
 							<p className="text-green-700 font-bold mb-2">
 								{prod.price.toLocaleString()} XAF
 							</p>

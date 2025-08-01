@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ViewProductDetails from "../components/ViewProductDetails";
-
-const electronicProducts = [
-  { id: 5, image: "smartphone.jpg", title: "Smartphone", price: 45000, quantity: 1 },
-  { id: 6, image: "laptop.jpg", title: "Laptop", price: 120000, quantity: 1 },
-  { id: 7, image: "headphones.jpg", title: "Headphones", price: 15000, quantity: 1 },
-  { id: 8, image: "tablet.jpg", title: "Tablet", price: 65000, quantity: 1 },
-];
+import { electronicsProducts } from '../data/mockProducts';
 
 const Electronics = ({
   cartItems,
@@ -51,10 +45,10 @@ const Electronics = ({
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Electronics</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {electronicProducts.map((prod, idx) => (
-            <div key={idx} className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
-              <img src={prod.image} alt={prod.title} className="w-32 h-40 object-cover rounded mb-3" />
-              <h3 className="font-semibold text-lg mb-1">{prod.title}</h3>
+          {electronicsProducts.map((prod) => (
+            <div key={prod.id} className="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+              <img src={prod.imageUrl} alt={prod.name} className="w-32 h-40 object-cover rounded mb-3" />
+              <h3 className="font-semibold text-lg mb-1">{prod.name}</h3>
               <p className="text-green-700 font-bold mb-2">{prod.price.toLocaleString()} XAF</p>
               <div className="flex gap-2">
                 <button

@@ -7,6 +7,8 @@ import Footer from "../components/Footer";
 import CategoryCard from "../components/ProductCard";
 import ReviewCard from "../components/ReviewCard";
 import ViewProductDetails from "../components/ViewProductDetails";
+// Import mock product data
+import { clothingProducts, furnitureProducts, getFeaturedProducts } from "../data/mockProducts";
 // You can use Lucide, Heroicons, or SVGs for icons. Here are SVGs for simplicity:
 const CartIcon = () => (
   <svg
@@ -34,19 +36,9 @@ const UserIcon = () => (
   </svg>
 );
 
-const categoryProducts = [
-  { image: "green-gown.jpeg", title: "Green Gown", stars: 5 },
-  { image: "green-gown.jpeg", title: "Classic Dress", stars: 4 },
-  { image: "green-gown.jpeg", title: "Summer Wear", stars: 5 },
-  { image: "green-gown.jpeg", title: "Summer Wear", stars: 5 }
-];
-
-const furnitureProducts = [
-  { image: "/sofa-image.jpg", title: "Modern Sofa", stars: 5 },
-  { image: "/sofa-image.jpg", title: "Classic Couch", stars: 4 },
-  { image: "/sofa-image.jpg", title: "Luxury Sofa", stars: 5 },
-  { image: "/sofa-image.jpg", title: "Comfy Seat", stars: 4 },
-];
+// Get featured products from each category for display
+const categoryProductsForDisplay = clothingProducts.slice(0, 4);
+const furnitureProductsForDisplay = furnitureProducts.slice(0, 4);
 
 const reviewData = [
   {
@@ -142,11 +134,7 @@ const Home = ({
 }) => {
 
   // Example handlers for product actions
-  const handleViewProduct = (title) => {
-    // Find product in categoryProducts or furnitureProducts
-    const product =
-      categoryProducts.find((p) => p.title === title) ||
-      furnitureProducts.find((p) => p.title === title);
+  const handleViewProduct = (product) => {
     setSelectedProduct(product);
     setShowDetails(true);
   };
@@ -286,13 +274,14 @@ const Home = ({
             Clothing
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            {categoryProducts.map((prod, idx) => (
+            {categoryProductsForDisplay.map((prod, idx) => (
               <CategoryCard
-                key={idx}
-                image={prod.image}
-                title={prod.title}
-                onView={() => handleViewProduct(prod.title)}
-                onAddToCart={() => handleAddToCart(prod.title)}
+                key={prod.id}
+                image={prod.imageUrl}
+                title={prod.name}
+                price={prod.price}
+                onView={() => handleViewProduct(prod)}
+                onAddToCart={() => handleAddToCart(prod)}
               />
             ))}
           </div>
@@ -301,13 +290,14 @@ const Home = ({
             Furniture
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {furnitureProducts.map((prod, idx) => (
+            {furnitureProductsForDisplay.map((prod, idx) => (
               <CategoryCard
-                key={idx}
-                image={prod.image}
-                title={prod.title}
-                onView={() => handleViewProduct(prod.title)}
-                onAddToCart={() => handleAddToCart(prod.title)}
+                key={prod.id}
+                image={prod.imageUrl}
+                title={prod.name}
+                price={prod.price}
+                onView={() => handleViewProduct(prod)}
+                onAddToCart={() => handleAddToCart(prod)}
               />
             ))}
           </div>
