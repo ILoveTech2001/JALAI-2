@@ -62,7 +62,7 @@ const User = sequelize.define('User', {
     allowNull: true
   },
   profileImage: {
-    type: DataTypes.BLOB('long'),
+    type: DataTypes.BYTEA,
     allowNull: true
   },
   profileImageName: {

@@ -34,7 +34,7 @@ const Product = sequelize.define('Product', {
     defaultValue: 'PENDING_APPROVAL'
   },
   imageData: {
-    type: DataTypes.BLOB('long'),
+    type: DataTypes.BYTEA,
     allowNull: true
   },
   imageName: {

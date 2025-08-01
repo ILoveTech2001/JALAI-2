@@ -36,7 +36,7 @@ const Category = sequelize.define('Category', {
     defaultValue: 0
   },
   imageData: {
-    type: DataTypes.BLOB('long'),
+    type: DataTypes.BYTEA,
     allowNull: true
   },
   imageName: {

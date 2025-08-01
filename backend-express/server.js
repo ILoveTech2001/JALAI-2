@@ -152,12 +152,32 @@ app.get('/', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
+// Database reset function
+const resetDatabase = async () => {
+  try {
+    console.log('🔄 Resetting database...');
+
+    // Drop all tables manually
+    await sequelize.query('DROP SCHEMA public CASCADE;');
+    await sequelize.query('CREATE SCHEMA public;');
+    await sequelize.query('GRANT ALL ON SCHEMA public TO postgres;');
+    await sequelize.query('GRANT ALL ON SCHEMA public TO public;');
+
+    console.log('✅ Database schema reset successfully.');
+  } catch (error) {
+    console.log('⚠️ Schema reset failed, continuing with force sync:', error.message);
+  }
+};
+
 // Database connection and server startup
 const startServer = async () => {
   try {
     // Connect to database
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
+
+    // Reset database completely
+    await resetDatabase();
 
     // Sync database models - force recreate for clean start
     await sequelize.sync({ force: true });
