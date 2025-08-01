@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 8080;
 
 // CORS configuration for deployment
 app.use(cors({
-  origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://jalai-2.vercel.app'],
+  origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'https://jalai-2-ecommerce.vercel.app'],
   credentials: true
 }));
 

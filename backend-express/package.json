@@ -4,8 +4,9 @@
   "description": "JALAI E-commerce Platform Backend - Express.js API",
   "main": "server.js",
   "scripts": {
-    "start": "node test-server.js",
-    "dev": "node test-server.js",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test-server": "node test-server.js",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
     "test": "jest",
