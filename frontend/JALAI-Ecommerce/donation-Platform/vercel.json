@@ -1,4 +1,7 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install --legacy-peer-deps",
   "rewrites": [
     {
       "source": "/(.*)",
@@ -17,6 +20,7 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://jalai-237-jalai.onrender.com/api"
+    "VITE_API_URL": "https://jalai-237-jalai.onrender.com/api",
+    "NODE_ENV": "production"
   }
 }
