@@ -73,6 +73,42 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Create admin user function
+const createAdminUser = async () => {
+  try {
+    const { User } = require('./models');
+    const bcrypt = require('bcryptjs');
+
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@jalai.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+
+    // Check if admin user already exists
+    const existingAdmin = await User.findOne({ where: { email: adminEmail } });
+
+    if (!existingAdmin) {
+      // Hash password
+      const hashedPassword = await bcrypt.hash(adminPassword, 12);
+
+      // Create admin user
+      await User.create({
+        firstName: 'Admin',
+        lastName: 'User',
+        email: adminEmail,
+        password: hashedPassword,
+        role: 'ADMIN',
+        userType: 'ADMIN',
+        isVerified: true
+      });
+
+      console.log(`✅ Admin user created with email: ${adminEmail}`);
+    } else {
+      console.log(`✅ Admin user already exists: ${adminEmail}`);
+    }
+  } catch (error) {
+    console.error('❌ Error creating admin user:', error.message);
+  }
+};
+
 // Health check endpoint
 app.get('/health', async (req, res) => {
   let dbStatus = 'disconnected';
@@ -123,9 +159,13 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
 
-    // Sync database models (create tables if they don't exist)
-    await sequelize.sync({ alter: false });
-    console.log('✅ Database models synchronized.');
+    // Sync database models - force recreate for clean start
+    await sequelize.sync({ force: true });
+    console.log('✅ Database models synchronized (tables recreated).');
+
+    // Create admin user after tables are created
+    await createAdminUser();
+    console.log('✅ Admin user setup completed.');
 
     // Start server
     app.listen(PORT, () => {
