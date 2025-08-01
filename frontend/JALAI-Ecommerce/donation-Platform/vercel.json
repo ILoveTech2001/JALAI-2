@@ -21,6 +21,13 @@
   ],
   "env": {
     "VITE_API_URL": "https://jalai-237-jalai.onrender.com/api",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VITE_DEBUG": "true"
+  },
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://jalai-237-jalai.onrender.com/api",
+      "NODE_ENV": "production"
+    }
   }
 }

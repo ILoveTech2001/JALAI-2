@@ -1,7 +1,33 @@
 // API Service for JALAI Donation Platform
 class ApiService {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+    // Debug environment variables
+    console.log('Environment variables:', {
+      VITE_API_URL: import.meta.env.VITE_API_URL,
+      NODE_ENV: import.meta.env.NODE_ENV,
+      MODE: import.meta.env.MODE,
+      PROD: import.meta.env.PROD,
+      DEV: import.meta.env.DEV
+    });
+
+    // Determine API URL with multiple fallbacks
+    let apiUrl = import.meta.env.VITE_API_URL;
+
+    // If no environment variable, check if we're in production
+    if (!apiUrl) {
+      if (import.meta.env.PROD || window.location.hostname.includes('vercel.app')) {
+        apiUrl = 'https://jalai-237-jalai.onrender.com/api';
+        console.log('Using production API URL (fallback):', apiUrl);
+      } else {
+        apiUrl = 'http://localhost:8080/api';
+        console.log('Using development API URL (fallback):', apiUrl);
+      }
+    } else {
+      console.log('Using environment variable API URL:', apiUrl);
+    }
+
+    this.baseURL = apiUrl;
+    console.log('API Service initialized with baseURL:', this.baseURL);
     this.token = localStorage.getItem('accessToken');
   }
 
